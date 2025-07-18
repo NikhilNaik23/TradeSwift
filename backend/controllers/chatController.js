@@ -1,0 +1,79 @@
+import Chat from "../models/chatModel.js";
+import mongoose from "mongoose";
+
+const objectId = (id) => mongoose.Types.ObjectId.isValid(id);
+
+export const sendMessage = async (req, res) => {
+  try {
+    const sender = req.user._id;
+    const { receiver, product } = req.body;
+    const { message } = req.body;
+
+    if (!objectId(receiver) || !objectId(product)) {
+      return res.status(400).json({ message: "Invalid receiver or product ID" });
+    }
+
+    if (!message || message.trim() === "") {
+      return res.status(400).json({ message: "Message content cannot be empty" });
+    }
+
+    const newMessage = await Chat.create({
+      sender,
+      receiver,
+      product,
+      message,
+    });
+
+    res.status(201).json({ message: "Message sent successfully", data: newMessage });
+  } catch (error) {
+    console.error("sendMessage Controller Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getMessagesWithUser = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { receiver, product } = req.query;
+
+    if (!objectId(receiver) || !objectId(product)) {
+      return res.status(400).json({ message: "Invalid receiver or product ID" });
+    }
+
+    const messages = await Chat.find({
+      product,
+      $or: [
+        { sender: userId, receiver },
+        { sender: receiver, receiver: userId },
+      ],
+    })
+      .sort({ createdAt: 1 })
+      .populate("sender", "name")
+      .populate("receiver", "name");
+
+    res.status(200).json({ message: "Messages retrieved", data: messages });
+  } catch (error) {
+    console.error("getMessagesWithUser Controller Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getMessagesByProduct = async (req, res) => {
+  try {
+    const { id: product } = req.params;
+
+    if (!objectId(product)) {
+      return res.status(400).json({ message: "Invalid product ID" });
+    }
+
+    const messages = await Chat.find({ product })
+      .sort({ createdAt: 1 })
+      .populate("sender", "name")
+      .populate("receiver", "name");
+
+    res.status(200).json({ message: "Messages fetched successfully", data: messages });
+  } catch (error) {
+    console.error("getMessagesByProduct Controller Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
