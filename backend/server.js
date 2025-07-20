@@ -25,6 +25,14 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 apis(app);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+  });
+}
+
 // Utility: always sort user IDs for consistent room
 function getChatRoomId(userId1, userId2, productId) {
   return [String(userId1), String(userId2)].sort().join("_") + "_" + productId;
@@ -96,6 +104,8 @@ io.on("connection", (socket) => {
     console.log(`🚫 Disconnected: ${socket.user.name} (${socket.id})`);
   });
 });
+
+
 
 server.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
