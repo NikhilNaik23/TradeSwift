@@ -17,11 +17,12 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
   const inputRef = useRef(null);
   const socket = useRef(null);
 
-  // Setup socket once per mount and ROOM
   useEffect(() => {
     if (!currentUser || !receiverId || !productId) return;
 
-    socket.current = io(import.meta.env.VITE_SOCKET_URL, { withCredentials: true });
+    socket.current = io(import.meta.env.VITE_SOCKET_URL, {
+      withCredentials: true,
+    });
     const roomId = getChatRoomId(currentUser._id, receiverId, productId);
 
     socket.current.on("connect", () => {
@@ -39,12 +40,13 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
     };
   }, [currentUser, receiverId, productId]);
 
-  // Fetch initially (chat history)
   useEffect(() => {
     const fetchMessages = async () => {
       setLoading(true);
       try {
-        const res = await api.get(`/messages/user?receiver=${receiverId}&product=${productId}`);
+        const res = await api.get(
+          `/messages/user?receiver=${receiverId}&product=${productId}`
+        );
         setMessages(res.data.chats);
       } finally {
         setLoading(false);
@@ -58,7 +60,7 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Send message (POST + real-time)
+  // Inside ChatBox.jsx
   const sendMessage = async () => {
     if (!input.trim()) return;
     try {
@@ -68,10 +70,8 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
         product: productId,
         message: input,
       });
-      setMessages((prev) => [...prev, res.data.chat]);
-      setInput("");
 
-      // Real-time emit for both participants
+      setInput("");
       const roomId = getChatRoomId(currentUser._id, receiverId, productId);
       socket.current.emit("sendMessage", {
         message: res.data.chat.message,
