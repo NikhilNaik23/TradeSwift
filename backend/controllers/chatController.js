@@ -8,8 +8,7 @@ const objectId = (id) => mongoose.Types.ObjectId.isValid(id);
 export const sendMessage = async (req, res) => {
   try {
     const sender = req.user._id;
-    const { receiver, product } = req.body;
-    const { message } = req.body;
+    const { receiver, product,message } = req.body;
 
     if (!objectId(receiver) || !objectId(product)) {
       return res
@@ -29,7 +28,7 @@ export const sendMessage = async (req, res) => {
       product,
       message,
     });
-
+ 
     res
       .status(201)
       .json({ message: "Message sent successfully", chat: newMessage });
