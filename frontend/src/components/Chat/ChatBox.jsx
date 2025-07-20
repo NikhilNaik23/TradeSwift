@@ -21,7 +21,7 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
   useEffect(() => {
     if (!currentUser || !receiverId || !productId) return;
 
-    socket.current = io("http://localhost:5000", { withCredentials: true });
+    socket.current = io(import.meta.env.VITE_SOCKET_URL, { withCredentials: true });
     const roomId = getChatRoomId(currentUser._id, receiverId, productId);
 
     socket.current.on("connect", () => {

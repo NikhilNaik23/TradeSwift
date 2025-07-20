@@ -65,6 +65,7 @@ const App = () => {
               </ProtectedRoute>
             }
           >
+            <Route path="/products/:id" element={<ProductDetailsPage />} />
             <Route path="/seller/dashboard" element={<SellerDashboard />} />
             <Route path="/seller/products" element={<SellerProducts />} />
             <Route path="/seller/add-product" element={<AddProduct />} />
@@ -85,6 +86,7 @@ const App = () => {
               </ProtectedRoute>
             }
           >
+            <Route path="/products/:id" element={<ProductDetailsPage />} />
             <Route path="/buyer/products" element={<ProductPage />} />
             <Route path="/buyer/profile" element={<ProfilePage />} />
             <Route path="/buyer/cart" element={<CartPage />} />
