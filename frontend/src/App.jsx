@@ -45,6 +45,14 @@ const App = () => {
     fetchUser();
   }, [fetchUser]);
 
+  useEffect(() => {
+    user
+      ? user.role === "seller"
+        ? navigate("/seller/dashboard")
+        : navigate("/buyer/dashboard")
+      : navigate("/");
+  }, []);
+
   return (
     <>
       <Toaster position="top-right" />
