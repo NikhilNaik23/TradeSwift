@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../utils/axios";
 import { motion } from "framer-motion";
 
-const SellerChatsPage = () => {
+const BuyerChatsPage = () => {
   const [inbox, setInbox] = useState([]);
   const navigate = useNavigate();
 
@@ -69,7 +69,7 @@ const SellerChatsPage = () => {
               transition: "box-shadow 0.3s ease",
             }}
             onClick={() =>
-              navigate(`/seller/chat/${conv._id.buyer}/${conv._id.product}`)
+              navigate(`/buyer/chat/${conv._id.buyer}/${conv._id.product}`)
             }
           >
             <div
@@ -84,6 +84,7 @@ const SellerChatsPage = () => {
             >
               {/* Product Image */}
               {Array.isArray(conv.product?.images) && conv.product.images.length > 0 ? (
+                
                 <img
                   src={conv.product.images[0]}
                   alt={conv.product.title || "Product"}
@@ -163,4 +164,4 @@ const SellerChatsPage = () => {
   );
 };
 
-export default SellerChatsPage;
+export default BuyerChatsPage;

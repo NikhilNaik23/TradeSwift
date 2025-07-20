@@ -32,6 +32,7 @@ import CartPage from "./components/Buyer/CartPage";
 import EditProduct from "./components/Seller/EditProduct";
 import ChatPage from "./pages/ChatPage";
 import SellerChatsPage from "./pages/SellerChatsPage";
+import BuyerChatsPage from "./pages/BuyerChatsPage";
 
 // Pages - Buyer
 
@@ -90,6 +91,7 @@ const App = () => {
           <Route path="/buyer/cart" element={<CartPage />} />
           <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
           <Route path="/buyer/orders" element={<BuyerOrders />} />
+          <Route path="/buyer/chats" element={<BuyerChatsPage />} />
           <Route
             path="/buyer/chat/:receiverId/:productId"
             element={<ChatPage />}

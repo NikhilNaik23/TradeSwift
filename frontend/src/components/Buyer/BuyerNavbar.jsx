@@ -47,6 +47,9 @@ const BuyerNavbar = () => {
         <Link to="/buyer/orders" className="hover:text-yellow-300 transition">
           My Orders
         </Link>
+        <Link to="/buyer/chats" className="hover:text-yellow-300 transition">
+          Chat
+        </Link>
         <Link to="/buyer/profile" className="hover:text-yellow-300 transition">
           Profile
         </Link>

@@ -109,7 +109,7 @@ export const getSellerInbox = async (req, res) => {
     for (let c of chats) {
       c.buyer = await User.findById(c._id.buyer).select("name email role");
 
-      c.product = await Product.findById(c._id.product).select("title");
+      c.product = await Product.findById(c._id.product).select("title images");
     }
 
     res.status(200).json({ inbox: chats });
@@ -117,3 +117,23 @@ export const getSellerInbox = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const markRead = async (req, res) => {
+  const { userId, senderId, productId } = req.body;
+
+  try {
+    await Chat.updateMany(
+      {
+        receiver: userId,
+        sender: senderId,
+        product: productId,
+        isRead: false,
+      },
+      { isRead: true }
+    );
+
+    res.status(200).json({ message: 'Messages marked as read' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update messages' });
+  }
+}

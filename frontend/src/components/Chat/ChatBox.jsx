@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import api from "../../utils/axios";
-import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const ChatBox = ({ currentUser, receiverId, productId }) => {
@@ -11,11 +10,25 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
 
   const fetchMessages = async () => {
     try {
-      const res = await api.get(`/messages/user?receiver=${receiverId}&product=${productId}`);
+      const res = await api.get(
+        `/messages/user?receiver=${receiverId}&product=${productId}`
+      );
       setMessages(res.data.chats);
     } catch (err) {
       console.error(err);
       toast.error("Failed to fetch messages");
+    }
+  };
+
+  const markMessagesRead = async () => {
+    try {
+      await api.put("/messages/mark-read", {
+        userId: currentUser._id,
+        senderId: receiverId,
+        productId,
+      });
+    } catch (error) {
+      console.error("Failed to mark messages as read", error);
     }
   };
 
@@ -38,28 +51,46 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
 
   useEffect(() => {
     fetchMessages();
+    markMessagesRead();
   }, [receiverId, productId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // 🧠 Helper to handle both object and string sender
+  const isCurrentUser = (sender) => {
+    if (!sender) return false;
+    return typeof sender === "string"
+      ? sender === currentUser._id
+      : sender._id === currentUser._id;
+  };
+
   return (
     <div className="w-full max-w-xl mx-auto p-4 bg-white rounded-2xl shadow-xl flex flex-col h-[70vh]">
-      <div className="flex-1 overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-blue-300">
+      <div className="flex-1 overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-blue-300 flex flex-col">
         {messages.map((msg, i) => (
           <motion.div
             key={msg._id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.03 }}
-            className={`max-w-[80%] px-4 py-2 rounded-lg text-sm ${
-              msg.sender._id === currentUser._id
-                ? "bg-blue-500 text-white self-end"
-                : "bg-gray-200 text-gray-900 self-start"
-            }`}
+            className="flex"
+            style={{
+              justifyContent: isCurrentUser(msg.sender)
+                ? "flex-end"
+                : "flex-start",
+            }}
           >
-            {msg.message}
+            <div
+              className={`max-w-[80%] px-4 py-2 rounded-lg text-sm ${
+                isCurrentUser(msg.sender)
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-900"
+              }`}
+            >
+              {msg.message}
+            </div>
           </motion.div>
         ))}
         <div ref={messagesEndRef}></div>
