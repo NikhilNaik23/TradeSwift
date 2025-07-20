@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Electronics", "Furniture"],
+      enum: ["electronics", "furniture"],
       required: true,
     },
     images: [{ type: String, required: true }],
@@ -43,12 +43,11 @@ const productSchema = new mongoose.Schema(
       contactNumber: {
         type: String,
         required: true,
-        match: [/^[6-9]\d{10}$/, "Please enter a valid 10-digit phone number"],
+        match: [/^[6-9]\d{9}$/, "Please enter a valid 10-digit phone number"],
       },
       email: {
         type: String,
         required: [true, "Email is required"],
-        unique: true,
         lowercase: true,
         trim: true,
         match: [

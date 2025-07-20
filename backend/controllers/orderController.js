@@ -7,7 +7,7 @@ export const createOrder = async (req, res) => {
     const { product: productId, amount } = req.body;
     const buyerId = req.user._id;
 
-    const product = await Product.findById(productId).populate("owner");
+    const product = await Product.findById(productId).populate("postedBy");
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -16,13 +16,13 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Product already sold" });
     }
 
-    if (product.owner._id.toString() === buyerId.toString()) {
+    if (product.postedBy.toString() === buyerId.toString()) {
       return res.status(400).json({ message: "You cannot buy your own product" });
     }
 
     const order = await Order.create({
       buyer: buyerId,
-      seller: product.owner._id,
+      seller: product.postedBy,
       product: productId,
       amount,
       status: "pending",
@@ -83,5 +83,23 @@ export const getOrderById = async (req, res) => {
   } catch (error) {
     console.error("Error fetching order:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const order = await Order.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    res.status(200).json({ message: "Order status updated", order });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating status", error });
   }
 };

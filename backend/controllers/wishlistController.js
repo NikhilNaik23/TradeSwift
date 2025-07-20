@@ -44,15 +44,15 @@ export const getWishlist = async (req, res) => {
 };
 
 export const removeFromWishlist = async (req, res) => {
-  const { id: productId } = req.params;
-  if (!objectId(productId)) {
+  const { id: cartId } = req.params;
+  if (!objectId(cartId)) {
     return res.status(400).json({ message: "Invalid Product Id" });
   }
 
   try {
     const deletedItem = await WishList.findOneAndDelete({
       user: req.user._id,
-      product: productId,
+      _id: cartId,
     });
 
     if (!deletedItem) {
@@ -62,6 +62,16 @@ export const removeFromWishlist = async (req, res) => {
     res.status(200).json({ message: "Item removed from wishlist" });
   } catch (error) {
     console.error("removeFromWishlist Controller Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const clearCart = async (req, res) => {
+  try {
+    await WishList.deleteMany({ user: req.user._id });
+    res.status(200).json({ message: "Wishlist cleared" });
+  } catch (error) {
+    console.error("clearCart Controller Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

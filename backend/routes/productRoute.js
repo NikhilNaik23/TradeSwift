@@ -3,6 +3,7 @@ import {
   createProduct,
   deleteProduct,
   getAllProducts,
+  getAllProductsOfSeller,
   getProductById,
   markProductAsSold,
   updateProduct,
@@ -18,8 +19,9 @@ router.post(
   upload.array("images", 5),
   createProduct
 );
-router.get("/", protectRoute, getAllProducts);
-router.get("/:id", protectRoute, getProductById);
+router.get("/", getAllProducts);
+router.get("/seller-products", protectRoute, restrictToRoles("seller"), getAllProductsOfSeller);
+router.get("/:id", getProductById);
 router.put("/:id", protectRoute, restrictToRoles("seller"), updateProduct);
 router.delete("/:id", protectRoute, restrictToRoles("seller"), deleteProduct);
 router.patch(

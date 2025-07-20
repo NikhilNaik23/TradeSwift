@@ -3,6 +3,7 @@ import {
   deactivateAccount,
   getUserProfile,
   loginUser,
+  logout,
   registerUser,
   switchRole,
   updateUserProfile,
@@ -16,5 +17,6 @@ router.get("/me", protectRoute, getUserProfile);
 router.put("/update-me", protectRoute, updateUserProfile);
 router.patch("/deactivate", protectRoute, deactivateAccount);
 router.patch("/switch-role", protectRoute, switchRole);
+router.post("/logout", protectRoute, logout);
 
 export default router;

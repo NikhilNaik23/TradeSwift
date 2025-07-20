@@ -1,67 +1,74 @@
 import mongoose from "mongoose";
 import Product from "../models/productModel.js";
-import cloudinary from "../utils/cloudinary.js";
-
+import cloudinary from "../config/cloudinary.js";
+import User from "../models/userModel.js";
 const objectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
 export const createProduct = async (req, res) => {
-  const {
-    title,
-    description,
-    price,
-    category,
-    images,
-    location,
-    contactInfo,
-    condition,
-  } = req.body;
-  const user_id = req.user._id;
-  try {
-    if (
-      !title ||
-      !description ||
-      !price ||
-      !category ||
-      !images ||
-      !location ||
-      !contactInfo ||
-      !condition
-    ) {
-      return res.status(400).json({ message: "All fields are mandatory" });
-    }
-    const existingProduct = await Product.findOne({
-      title,
-      description,
-      price,
-      images,
-      category,
-      postedBy: user_id,
+  const data = JSON.parse(req.body.data);
+  const { title, description, price, category, condition, phone } = data;
+  const user_id = req.user?._id;
+
+  // Validation check
+  const missing = [];
+  if (!title) missing.push("title");
+  if (!description) missing.push("description");
+  if (!price) missing.push("price");
+  if (!category) missing.push("category");
+  if (!condition) missing.push("condition");
+  if (!phone) missing.push("phone");
+  if (!req.files || req.files.length === 0) missing.push("images");
+  console.log(req.files);
+  console.log(req.files.length);
+  console.log(missing);
+
+  if (missing.length > 0) {
+    return res.status(400).json({
+      message: "Validation Error: Missing required fields",
+      missingFields: missing,
     });
-    if (existingProduct) {
-      return res.status(400).json({ message: "Product already exists" });
-    }
+  }
+
+  try {
+    const user = await User.findById(user_id);
+    const contactInfo = {
+      contactNumber: phone,
+      email: user.email,
+    };
     const imageUrls = req.files.map((file) => file.path);
-    const newProduct = new Product({
+
+    const product = new Product({
       title,
       description,
       price,
       category,
-      images: imageUrls,
-      location,
-      contactInfo,
       condition,
+      images: imageUrls,
+      location: user.address,
+      contactInfo,
       postedBy: user_id,
     });
 
-    await newProduct.save();
+    await product.save();
 
     return res.status(201).json({
       message: "Product created successfully",
-      product: newProduct,
+      product,
     });
   } catch (error) {
-    console.log("createProduct Controller Error: ", error);
-    res.status(500).json({ message: "Server Internal Error" });
+    console.error(
+      "❌ createProduct Controller Error:",
+      JSON.stringify(error, null, 2)
+    );
+
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      },
+    });
   }
 };
 
@@ -75,7 +82,7 @@ export const getAllProducts = async (req, res) => {
     const filter = { status: "available" };
 
     if (category) filter.category = category;
-    if (location) filter.location = location;
+    if (location) filter["location.city"] = location;
     if (condition) filter.condition = condition;
 
     if (search) {
@@ -220,6 +227,21 @@ export const markProductAsSold = async (req, res) => {
     res.status(200).json({ message: "Marked as sold" });
   } catch (error) {
     console.error("markProductAsSold Controller Error: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getAllProductsOfSeller = async (req, res) => {
+  const user_id = req.user._id;
+
+  try {
+    const products = await Product.find({ postedBy: user_id }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json({ total: products.length, products });
+  } catch (error) {
+    console.error("getAllProductsOfSeller Controller Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

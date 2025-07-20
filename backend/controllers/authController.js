@@ -9,7 +9,7 @@ const generateToken = (user_id) => {
 };
 
 export const registerUser = async (req, res) => {
-  const { name, email, password, address } = req.body;
+  const { name, email, password, address, role = "buyer" } = req.body;
   try {
     if (!name || !email || !password || !address) {
       return res.status(400).json({ message: "All fields are mandatory" });
@@ -23,6 +23,7 @@ export const registerUser = async (req, res) => {
       email,
       password,
       address,
+      role,
     });
 
     const token = generateToken(newUser._id);
@@ -40,6 +41,7 @@ export const registerUser = async (req, res) => {
           _id: newUser._id,
           name: newUser.name,
           email: newUser.email,
+          role: newUser.role,
         },
       });
   } catch (error) {
@@ -72,16 +74,19 @@ export const loginUser = async (req, res) => {
         sameSite: "strict",
       })
       .status(200)
-      .json({ message: "Logged in successfully" });
+      .json({
+        message: "Logged in successfully",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
   } catch (error) {
     console.log("loginUser controller error: ", error);
     return res.status(500).json({
       message: "Internal Server Error",
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      },
     });
   }
 };
@@ -172,5 +177,22 @@ export const switchRole = async (req, res) => {
   } catch (error) {
     console.error("Error switching role:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    res
+      .clearCookie("token", {
+        httpOnly: true,
+        sameSite: "Strict",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+      })
+      .status(200)
+      .json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout failed:", error);
+    res.status(500).json({ message: "Logout failed" });
   }
 };
