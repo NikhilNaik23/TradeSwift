@@ -5,12 +5,17 @@ import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import { Server as SocketIOServer } from "socket.io";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url"; 
 dotenv.config();
 
 import connectDB from "./config/db.js";
 import apis from "./apis/apis.js";
 import Chat from "./models/chatModel.js";
 import User from "./models/userModel.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);

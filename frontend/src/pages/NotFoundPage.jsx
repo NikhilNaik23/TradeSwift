@@ -18,17 +18,19 @@ const NotFoundPage = () => {
         className="px-5 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
         onClick={() =>
           navigate(
-            `${
-              !user
-                ? "/"
-                : user.role === "seller"
-                ? "/seller/dashboard"
-                : "/buyer/dashboard"
-            }`
+            !user
+              ? "/"
+              : user.role === "seller"
+              ? "/seller/dashboard"
+              : "/buyer/dashboard"
           )
         }
       >
-        Go Home
+        {!user
+          ? "Go Home"
+          : user.role === "seller"
+          ? "Go to Seller Dashboard"
+          : "Go to Buyer Dashboard"}
       </button>
     </div>
   );
