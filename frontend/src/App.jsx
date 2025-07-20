@@ -33,6 +33,7 @@ import EditProduct from "./components/Seller/EditProduct";
 import ChatPage from "./pages/ChatPage";
 import SellerChatsPage from "./pages/SellerChatsPage";
 import BuyerChatsPage from "./pages/BuyerChatsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 // Pages - Buyer
 
@@ -49,54 +50,54 @@ const App = () => {
       <Toaster position="top-right" />
 
       <Routes>
-        {/* 🌐 Public Layout */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/products/:id" element={<ProductDetailsPage />} />
-        </Route>
-
-        {/* 🛒 Seller Layout */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={["seller"]}>
-              <SellerLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/seller/dashboard" element={<SellerDashboard />} />
-          <Route path="/seller/products" element={<SellerProducts />} />
-          <Route path="/seller/add-product" element={<AddProduct />} />
-          <Route path="/seller/orders" element={<SellerOrders />} />
-          <Route path="/seller/profile" element={<ProfilePage />} />
-          <Route path="/seller/edit-product/:id" element={<EditProduct />} />
-          <Route path="/seller/chats" element={<SellerChatsPage />} />
+        {!user ? (
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/products/:id" element={<ProductDetailsPage />} />
+          </Route>
+        ) : user.role === "seller" ? (
           <Route
-            path="/seller/chat/:receiverId/:productId"
-            element={<ChatPage />}
-          />
-        </Route>
-
-        {/* 👤 Buyer Layout */}
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={["buyer"]}>
-              <BuyerLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/buyer/products" element={<ProductPage />} />
-          <Route path="/buyer/profile" element={<ProfilePage />} />
-          <Route path="/buyer/cart" element={<CartPage />} />
-          <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
-          <Route path="/buyer/orders" element={<BuyerOrders />} />
-          <Route path="/buyer/chats" element={<BuyerChatsPage />} />
+            element={
+              <ProtectedRoute allowedRoles={["seller"]}>
+                <SellerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/seller/dashboard" element={<SellerDashboard />} />
+            <Route path="/seller/products" element={<SellerProducts />} />
+            <Route path="/seller/add-product" element={<AddProduct />} />
+            <Route path="/seller/orders" element={<SellerOrders />} />
+            <Route path="/seller/profile" element={<ProfilePage />} />
+            <Route path="/seller/edit-product/:id" element={<EditProduct />} />
+            <Route path="/seller/chats" element={<SellerChatsPage />} />
+            <Route
+              path="/seller/chat/:receiverId/:productId"
+              element={<ChatPage />}
+            />
+          </Route>
+        ) : (
           <Route
-            path="/buyer/chat/:receiverId/:productId"
-            element={<ChatPage />}
-          />
-        </Route>
+            element={
+              <ProtectedRoute allowedRoles={["buyer"]}>
+                <BuyerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/buyer/products" element={<ProductPage />} />
+            <Route path="/buyer/profile" element={<ProfilePage />} />
+            <Route path="/buyer/cart" element={<CartPage />} />
+            <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
+            <Route path="/buyer/orders" element={<BuyerOrders />} />
+            <Route path="/buyer/chats" element={<BuyerChatsPage />} />
+            <Route
+              path="/buyer/chat/:receiverId/:productId"
+              element={<ChatPage />}
+            />
+          </Route>
+        )}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );

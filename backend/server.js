@@ -82,11 +82,9 @@ io.on("connection", (socket) => {
         message,
       });
 
-      // Populate for better frontend display immediately
       await newMessage.populate("sender", "name");
       await newMessage.populate("receiver", "name");
 
-      // Send to all sockets joined to this chat
       io.to(roomId).emit("receiveMessage", newMessage);
       console.log(`[SEND] To room ${roomId}:`, newMessage.message);
     } catch (e) {

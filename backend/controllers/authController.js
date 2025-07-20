@@ -165,10 +165,8 @@ export const switchRole = async (req, res) => {
   try {
     const userId = req.user._id;
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    user.role = user.role === "buyer" ? "seller" : "buyer";
+    const role = user.role;
+    user.role = role === "buyer" ? "seller" : "buyer";
     await user.save();
     res.status(200).json({
       message: `Role switched successfully to ${user.role}`,

@@ -28,6 +28,9 @@ const SellerNavbar = () => {
         <Link to="/seller/chats" className="px-4 py-2 hover:bg-gray-100">
           Messages
         </Link>
+        <Link to="/seller/profile" className="hover:text-yellow-300 transition">
+                  Profile
+                </Link>
 
         <button
           onClick={handleLogout}

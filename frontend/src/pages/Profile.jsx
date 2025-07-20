@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import useAuthStore from "../store/useAuthStore";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
+  const fetchUser = useAuthStore((state) => state.fetchUser);
   const fetchProfile = async () => {
     try {
       const res = await api.get("/auth/me");
@@ -14,12 +17,25 @@ const ProfilePage = () => {
       toast.error("Unable to fetch profile");
     }
   };
+  const switchRole = async () => {
+    try {
+      const res = await api.patch("/auth/switch-role");
+      toast.success(res.data.message);
+      await fetchUser();
+      navigate(
+        res.data.role === "buyer" ? "/buyer/dashboard" : "/seller/dashboard"
+      );
+    } catch (error) {
+      toast.error("Unable to switch role");
+    }
+  };
 
   useEffect(() => {
     fetchProfile();
   }, []);
 
-  if (!user) return <div className="p-6 text-center text-gray-600">Loading...</div>;
+  if (!user)
+    return <div className="p-6 text-center text-gray-600">Loading...</div>;
 
   return (
     <motion.div
@@ -41,7 +57,9 @@ const ProfilePage = () => {
           </div>
         )}
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{user.name}</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+            {user.name}
+          </h2>
           <p className="text-sm text-gray-500">{user.email}</p>
         </div>
       </div>
@@ -73,6 +91,14 @@ const ProfilePage = () => {
             day: "numeric",
           })}
         </div>
+      </div>
+      <div className="flex items-center justify-end mt-6">
+        <button
+          onClick={switchRole}
+          className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition"
+        >
+          Switch Role
+        </button>
       </div>
     </motion.div>
   );
