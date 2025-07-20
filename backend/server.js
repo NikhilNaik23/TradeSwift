@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { Server as SocketIOServer } from "socket.io";
 import dotenv from "dotenv";
 import path from "path";
-import { fileURLToPath } from "url"; 
+import { fileURLToPath } from "url";
 dotenv.config();
 
 import connectDB from "./config/db.js";
@@ -22,7 +22,13 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://tradeswift-g2zu.onrender.com"],
+
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,7 +52,8 @@ function getChatRoomId(userId1, userId2, productId) {
 // --- SOCKET.IO SETUP ---
 const io = new SocketIOServer(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://tradeswift-g2zu.onrender.com"],
+
     credentials: true,
   },
 });
@@ -79,7 +86,10 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     console.log(`Socket ${socket.id} joined room ${roomId}`);
     // Log all sockets in this room for debugging:
-    console.log("Members in room:", Array.from(io.sockets.adapter.rooms.get(roomId) || []));
+    console.log(
+      "Members in room:",
+      Array.from(io.sockets.adapter.rooms.get(roomId) || [])
+    );
   });
 
   // Message Handling
@@ -109,8 +119,6 @@ io.on("connection", (socket) => {
     console.log(`🚫 Disconnected: ${socket.user.name} (${socket.id})`);
   });
 });
-
-
 
 server.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
