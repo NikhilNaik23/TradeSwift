@@ -22,12 +22,11 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Product already sold" });
     }
 
-    if (product.postedBy.toString() === buyerId.toString()) {
+    if (product.postedBy._id.toString() === buyerId.toString()) {
       return res
         .status(400)
         .json({ message: "You cannot buy your own product" });
     }
-
     const order = await Order.create({
       buyer: buyerId,
       seller: product.postedBy,
