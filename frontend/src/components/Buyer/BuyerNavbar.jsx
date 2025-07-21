@@ -119,7 +119,7 @@ const BuyerNavbar = () => {
       {open && (
         <div className="absolute top-full left-0 w-full bg-blue-600 text-white flex flex-col items-center md:hidden z-50 shadow-xl">
           <Link
-            to="/buyer/dashboard"
+            to="/"
             className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700"
             onClick={handleLinkClick}
           >
