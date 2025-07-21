@@ -23,17 +23,15 @@ const SellerNavbar = () => {
     }
   };
 
-  // Handles hamburger menu open/close and closes menu on navigation
   const handleLinkClick = () => setOpen(false);
 
   return (
     <nav className="bg-blue-700 text-white px-6 py-4 flex justify-between items-center relative">
-      {/* Logo/Brand */}
+    
       <Link to="/" className="text-xl font-bold">
         TradeSwift Seller
       </Link>
 
-      {/* Desktop Menu */}
       <div className="hidden md:flex space-x-4 items-center">
         <Link to="/seller/products" className="hover:text-yellow-300" onClick={handleLinkClick}>
           My Products
@@ -58,7 +56,6 @@ const SellerNavbar = () => {
         </button>
       </div>
 
-      {/* Hamburger menu button (mobile only) */}
       <button
         className="md:hidden p-2"
         onClick={() => setOpen(!open)}
@@ -67,7 +64,6 @@ const SellerNavbar = () => {
         {open ? <FiX size={28} /> : <FiMenu size={28} />}
       </button>
 
-      {/* Mobile menu */}
       {open && (
         <div className="absolute top-full left-0 w-full bg-blue-700 text-white flex flex-col items-center md:hidden z-20 shadow-lg">
           <Link to="/seller/products" className="py-2 w-full text-center hover:bg-blue-800" onClick={handleLinkClick}>

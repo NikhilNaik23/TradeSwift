@@ -33,16 +33,17 @@ const HomePage = () => {
       });
       setProducts(res.data.products);
     } catch (err) {
-      console.error("Error fetching products:", err.response?.data || err.message);
+      console.error(
+        "Error fetching products:",
+        err.response?.data || err.message
+      );
     }
   };
 
-  // Fetch user on initial mount
   useEffect(() => {
     fetchUser();
   }, []);
 
-  // Redirect based on user role after fetching
   useEffect(() => {
     if (!loading && user) {
       if (user.role === "seller") {
@@ -52,8 +53,6 @@ const HomePage = () => {
       }
     }
   }, [user, loading]);
-
-  // Fetch products when filters change (only if user is not logged in)
   useEffect(() => {
     if (!user && !loading) {
       fetchProducts();
@@ -79,7 +78,6 @@ const HomePage = () => {
         🌟 Explore the Latest Listings
       </motion.h1>
 
-      {/* Filters */}
       <motion.div
         className="mb-6 flex flex-col sm:flex-row flex-wrap gap-4 justify-center"
         initial={{ opacity: 0 }}
@@ -94,9 +92,8 @@ const HomePage = () => {
           className="border px-4 py-2 rounded-md shadow-md bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
         >
           <option value="">All Categories</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Furniture">Furniture</option>
-          {/* Add more categories if needed */}
+          <option value="electronics">Electronics</option>
+          <option value="furniture">Furniture</option>
         </select>
 
         <select
@@ -122,7 +119,6 @@ const HomePage = () => {
         />
       </motion.div>
 
-      {/* Product Grid */}
       <motion.div
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
         initial={{ opacity: 0 }}
