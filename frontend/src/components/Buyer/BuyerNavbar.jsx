@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FaShoppingCart } from "react-icons/fa";
@@ -11,10 +11,8 @@ const BuyerNavbar = () => {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
   const cartItems = useCartStore((state) => state.cartItems);
-
   const [open, setOpen] = useState(false);
-
-  console.log(cartItems.length);
+  const [itemsLength, setItemsLength] = useState(0);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -28,6 +26,18 @@ const BuyerNavbar = () => {
       toast.error(error.response?.data?.message || "Logout failed");
     }
   };
+  const fetchCart = async () => {
+    try {
+      const res = await api.get("/wishlist/");
+      console.log(res.data.wishlist.length)
+      setItemsLength(res.data.wishlist.length)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchCart();
+  });
 
   const handleLinkClick = () => setOpen(false);
 
@@ -83,9 +93,9 @@ const BuyerNavbar = () => {
           onClick={handleLinkClick}
         >
           <FaShoppingCart size={20} />
-          {cartItems.length > 0 && (
+          {itemsLength > 0 && (
             <span className="absolute -top-2 -right-2 bg-yellow-400 text-blue-800 text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-              {cartItems.length}
+              {itemsLength}
             </span>
           )}
         </Link>
@@ -152,9 +162,9 @@ const BuyerNavbar = () => {
               <FaShoppingCart size={20} />
               Cart
             </span>
-            {cartItems.length > 0 && (
+            {itemsLength > 0 && (
               <span className="absolute top-2 right-[30%] bg-yellow-400 text-blue-800 text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                {cartItems.length}
+                {itemsLength}
               </span>
             )}
           </Link>

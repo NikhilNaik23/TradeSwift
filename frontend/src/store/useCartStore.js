@@ -17,14 +17,20 @@ const useCartStore = create(
 
       removeFromCart: (itemId) =>
         set((state) => ({
-          cartItems: state.cartItems.filter((item) => String(item._id) !== String(itemId)),
+          cartItems: () => {
+            state.cartItems.filter((item) => {
+              String(item._id) !== String(itemId);
+            });
+          },
         })),
 
       clearCart: () => set({ cartItems: [] }),
+
+      setCartFromBackend: (items) => set({ cartItems: items }),
     }),
     {
       name: "cart-storage",
-      getStorage: () => localStorage, 
+      getStorage: () => localStorage,
     }
   )
 );

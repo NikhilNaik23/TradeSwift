@@ -9,8 +9,9 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const removeItemFromCart = useCartStore((state)=>state.removeFromCart)
-  const clearAllItems = useCartStore((state)=>state.clearCart)
+  const removeItemFromCart = useCartStore((state) => state.removeFromCart);
+  const clearAllItems = useCartStore((state) => state.clearCart);
+  const cart = useCartStore((state) => state.cartItems);
 
   const fetchCart = async () => {
     try {
@@ -28,7 +29,8 @@ const CartPage = () => {
     try {
       await api.delete(`/wishlist/${id}`);
       setCartItems((prev) => prev.filter((item) => item._id !== id));
-      removeItemFromCart(id)
+      removeItemFromCart(id);
+      console.log(cart)
       toast.success("Removed from cart");
     } catch (err) {
       toast.error("Failed to remove item");
@@ -40,7 +42,7 @@ const CartPage = () => {
     try {
       await api.delete("/wishlist");
       setCartItems([]);
-      clearAllItems()
+      clearAllItems();
       toast.success("Cart cleared");
     } catch (err) {
       toast.error("Failed to clear cart");
@@ -85,7 +87,9 @@ const CartPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-6 text-center text-zinc-800">🛒 Your Cart</h1>
+      <h1 className="text-4xl font-bold mb-6 text-center text-zinc-800">
+        🛒 Your Cart
+      </h1>
 
       {cartItems.length === 0 ? (
         <motion.div
