@@ -21,13 +21,33 @@ function AddProduct() {
     const form = formRef.current;
     const files = fileInputRef.current.files;
 
+    const phone = form.phone.value.trim();
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      toast.error("📵 Invalid phone number! Enter a valid 10-digit Indian number.");
+      return;
+    }
+
+    if (files.length === 0) {
+      toast.error("📸 Please upload at least one image.");
+      return;
+    }
+
+    for (let file of files) {
+      const validTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!validTypes.includes(file.type)) {
+        toast.error(`🚫 Invalid file type: ${file.name}`);
+        return;
+      }
+    }
+
     const data = {
       title: form.title.value,
       description: form.description.value,
       price: parseFloat(form.price.value),
       category: form.category.value,
       condition: form.condition.value,
-      phone: form.phone.value, // Only phone, rest from user server-side
+      phone,
     };
 
     const fd = new FormData();
@@ -44,6 +64,7 @@ function AddProduct() {
       });
       toast.success("✅ Product uploaded successfully!", { id: toastId });
       form.reset();
+      fileInputRef.current.value = "";
     } catch (err) {
       toast.error(err.response?.data?.message || err.message || "Server Error", {
         id: toastId,
@@ -111,7 +132,7 @@ function AddProduct() {
 
         <motion.input
           type="file"
-          accept="image/*"
+          accept="image/png, image/jpeg, image/jpg"
           multiple
           required
           ref={fileInputRef}
