@@ -47,13 +47,7 @@ const RegisterPage = () => {
       if (res.status === 201) {
         toast.success(res.data.message);
         setUser(res.data.user);
-        if (formData.role === "seller") {
-          navigate("/seller/dashboard");
-        } else if (formData.role === "buyer") {
-          navigate("/buyer/dashboard");
-        } else {
-          navigate("/");
-        }
+        navigate("/");
       }
     } catch (err) {
       const msg = err.response?.data?.message || "Registration failed";

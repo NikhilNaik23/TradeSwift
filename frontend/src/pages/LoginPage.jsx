@@ -34,13 +34,7 @@ const LoginPage = () => {
 
         // 🌟 Role-based redirection
         const role = data.user?.role?.toLowerCase();
-        if (role === "seller") {
-          navigate("/seller/dashboard");
-        } else if (role === "buyer") {
-          navigate("/buyer/dashboard");
-        } else {
-          navigate("/")
-        }
+        navigate("/")
       }
     } catch (err) {
       const message = err.response?.data?.message || "Login failed";

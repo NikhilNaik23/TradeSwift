@@ -21,7 +21,6 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
-// Middlewares
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://tradeswift-g2zu.onrender.com"],

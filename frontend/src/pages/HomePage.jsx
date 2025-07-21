@@ -1,9 +1,17 @@
+// src/pages/HomePage.jsx
 import React, { useEffect, useState } from "react";
-import ProductCard from "../components/ProductCard";
-import api from "../utils/axios";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import api from "../utils/axios";
+import ProductCard from "../components/ProductCard";
+import useAuthStore from "../store/useAuthStore";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const loading = useAuthStore((state) => state.loading);
+  const fetchUser = useAuthStore((state) => state.fetchUser);
+
   const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState({
     category: "",
@@ -25,13 +33,40 @@ const HomePage = () => {
       });
       setProducts(res.data.products);
     } catch (err) {
-      console.error("Error fetching products", err);
+      console.error("Error fetching products:", err.response?.data || err.message);
     }
   };
 
+  // Fetch user on initial mount
   useEffect(() => {
-    fetchProducts();
-  }, [filters]);
+    fetchUser();
+  }, []);
+
+  // Redirect based on user role after fetching
+  useEffect(() => {
+    if (!loading && user) {
+      if (user.role === "seller") {
+        navigate("/");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [user, loading]);
+
+  // Fetch products when filters change (only if user is not logged in)
+  useEffect(() => {
+    if (!user && !loading) {
+      fetchProducts();
+    }
+  }, [filters, user, loading]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-indigo-600 font-semibold text-lg">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-4 sm:p-8">
@@ -61,6 +96,7 @@ const HomePage = () => {
           <option value="">All Categories</option>
           <option value="Electronics">Electronics</option>
           <option value="Furniture">Furniture</option>
+          {/* Add more categories if needed */}
         </select>
 
         <select

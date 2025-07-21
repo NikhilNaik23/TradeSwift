@@ -29,7 +29,7 @@ const SellerNavbar = () => {
   return (
     <nav className="bg-blue-700 text-white px-6 py-4 flex justify-between items-center relative">
       {/* Logo/Brand */}
-      <Link to="/seller/dashboard" className="text-xl font-bold">
+      <Link to="/" className="text-xl font-bold">
         TradeSwift Seller
       </Link>
 

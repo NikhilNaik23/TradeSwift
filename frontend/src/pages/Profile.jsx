@@ -22,9 +22,7 @@ const ProfilePage = () => {
       const res = await api.patch("/auth/switch-role");
       toast.success(res.data.message);
       await fetchUser();
-      navigate(
-        res.data.role === "buyer" ? "/buyer/dashboard" : "/seller/dashboard"
-      );
+      navigate("/");
     } catch (error) {
       toast.error("Unable to switch role");
     }

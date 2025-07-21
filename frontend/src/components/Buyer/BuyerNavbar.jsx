@@ -44,7 +44,7 @@ const BuyerNavbar = () => {
   return (
     <nav className="bg-blue-600 text-white px-6 py-4 shadow-md flex justify-between items-center relative z-30">
       <Link
-        to="/buyer/dashboard"
+        to="/"
         className="text-2xl font-bold tracking-wide hover:text-yellow-300 transition"
         onClick={handleLinkClick}
       >
@@ -53,7 +53,7 @@ const BuyerNavbar = () => {
 
       <div className="hidden md:flex space-x-6 text-base font-medium items-center">
         <Link
-          to="/buyer/dashboard"
+          to="/"
           className="hover:text-yellow-300"
           onClick={handleLinkClick}
         >

@@ -8,6 +8,7 @@ const useAuthStore = create((set) => ({
   setUser: (userData) => set({ user: userData, loading: false }),
 
   fetchUser: async () => {
+    set({ loading: true });
     try {
       const res = await api.get("/auth/me", {
         withCredentials: true,

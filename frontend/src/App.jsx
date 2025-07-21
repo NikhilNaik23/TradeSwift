@@ -69,7 +69,7 @@ const App = () => {
             }
           >
             <Route path="/products/:id" element={<ProductDetailsPage />} />
-            <Route path="/seller/dashboard" element={<SellerDashboard />} />
+            <Route path="/" element={<SellerDashboard />} />
             <Route path="/seller/products" element={<SellerProducts />} />
             <Route path="/seller/add-product" element={<AddProduct />} />
             <Route path="/seller/orders" element={<SellerOrders />} />
@@ -95,7 +95,7 @@ const App = () => {
             <Route path="/buyer/products" element={<ProductPage />} />
             <Route path="/buyer/profile" element={<ProfilePage />} />
             <Route path="/buyer/cart" element={<CartPage />} />
-            <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
+            <Route path="/" element={<BuyerDashboard />} />
             <Route path="/buyer/orders" element={<BuyerOrders />} />
             <Route path="/buyer/chats" element={<BuyerChatsPage />} />
             <Route
