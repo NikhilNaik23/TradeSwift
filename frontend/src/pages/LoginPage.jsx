@@ -82,7 +82,6 @@ const LoginPage = () => {
             <input
               type="password"
               name="password"
-              minLength={6}
               value={formData.password}
               onChange={handleChange}
               required

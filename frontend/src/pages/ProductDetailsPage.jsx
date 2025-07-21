@@ -13,6 +13,7 @@ const ProductDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const user = useAuthStore((state) => state.user);
   const addToCart = useCartStore((state) => state.addToCart);
+  const cartItems = useCartStore((state) => state.cartItems);
 
   const [addingToCart, setAddingToCart] = useState(false);
 
@@ -22,7 +23,8 @@ const ProductDetailsPage = () => {
     setAddingToCart(true);
     try {
       const res = await api.post(`/wishlist/${product._id}`);
-      addToCart(product._id);
+      addToCart(product);
+      console.log(cartItems);
       toast.success(res.data.message || "Added to cart");
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to add to cart");
@@ -136,7 +138,9 @@ const ProductDetailsPage = () => {
                 </button>
 
                 {user._id !== product.postedBy && (
-                  <Link to={`/buyer/chat/${product.postedBy._id}/${product._id}`}>
+                  <Link
+                    to={`/buyer/chat/${product.postedBy._id}/${product._id}`}
+                  >
                     <button className="mt-3 ml-3 px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition">
                       Chat with Seller
                     </button>

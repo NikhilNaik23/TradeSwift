@@ -14,6 +14,8 @@ const BuyerNavbar = () => {
 
   const [open, setOpen] = useState(false);
 
+  console.log(cartItems.length);
+
   const handleLogout = async (e) => {
     e.preventDefault();
     toast.dismiss();
@@ -21,18 +23,16 @@ const BuyerNavbar = () => {
       const res = await api.post("/auth/logout", {}, { withCredentials: true });
       toast.success(res.data.message);
       logout();
-      navigate("/")
+      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Logout failed");
     }
   };
 
-  // Handles hamburger menu open/close and closes menu on link tap
   const handleLinkClick = () => setOpen(false);
 
   return (
     <nav className="bg-blue-600 text-white px-6 py-4 shadow-md flex justify-between items-center relative z-30">
-      {/* Logo */}
       <Link
         to="/buyer/dashboard"
         className="text-2xl font-bold tracking-wide hover:text-yellow-300 transition"
@@ -41,21 +41,40 @@ const BuyerNavbar = () => {
         TradeSwift Buyer
       </Link>
 
-      {/* Desktop links */}
       <div className="hidden md:flex space-x-6 text-base font-medium items-center">
-        <Link to="/buyer/dashboard" className="hover:text-yellow-300" onClick={handleLinkClick}>
+        <Link
+          to="/buyer/dashboard"
+          className="hover:text-yellow-300"
+          onClick={handleLinkClick}
+        >
           Dashboard
         </Link>
-        <Link to="/buyer/products" className="hover:text-yellow-300" onClick={handleLinkClick}>
+        <Link
+          to="/buyer/products"
+          className="hover:text-yellow-300"
+          onClick={handleLinkClick}
+        >
           Products
         </Link>
-        <Link to="/buyer/orders" className="hover:text-yellow-300" onClick={handleLinkClick}>
+        <Link
+          to="/buyer/orders"
+          className="hover:text-yellow-300"
+          onClick={handleLinkClick}
+        >
           My Orders
         </Link>
-        <Link to="/buyer/chats" className="hover:text-yellow-300" onClick={handleLinkClick}>
+        <Link
+          to="/buyer/chats"
+          className="hover:text-yellow-300"
+          onClick={handleLinkClick}
+        >
           Chat
         </Link>
-        <Link to="/buyer/profile" className="hover:text-yellow-300" onClick={handleLinkClick}>
+        <Link
+          to="/buyer/profile"
+          className="hover:text-yellow-300"
+          onClick={handleLinkClick}
+        >
           Profile
         </Link>
         <Link
@@ -78,27 +97,50 @@ const BuyerNavbar = () => {
         </button>
       </div>
 
-      {/* Hamburger menu button (mobile only) */}
-      <button className="md:hidden p-2" onClick={() => setOpen((v) => !v)} aria-label="Toggle menu">
+      <button
+        className="md:hidden p-2"
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Toggle menu"
+      >
         {open ? <FiX size={28} /> : <FiMenu size={28} />}
       </button>
 
       {/* Mobile menu */}
       {open && (
         <div className="absolute top-full left-0 w-full bg-blue-600 text-white flex flex-col items-center md:hidden z-50 shadow-xl">
-          <Link to="/buyer/dashboard" className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700" onClick={handleLinkClick}>
+          <Link
+            to="/buyer/dashboard"
+            className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700"
+            onClick={handleLinkClick}
+          >
             Dashboard
           </Link>
-          <Link to="/buyer/products" className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700" onClick={handleLinkClick}>
+          <Link
+            to="/buyer/products"
+            className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700"
+            onClick={handleLinkClick}
+          >
             Products
           </Link>
-          <Link to="/buyer/orders" className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700" onClick={handleLinkClick}>
+          <Link
+            to="/buyer/orders"
+            className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700"
+            onClick={handleLinkClick}
+          >
             My Orders
           </Link>
-          <Link to="/buyer/chats" className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700" onClick={handleLinkClick}>
+          <Link
+            to="/buyer/chats"
+            className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700"
+            onClick={handleLinkClick}
+          >
             Chat
           </Link>
-          <Link to="/buyer/profile" className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700" onClick={handleLinkClick}>
+          <Link
+            to="/buyer/profile"
+            className="py-3 w-full text-center border-b border-blue-700 hover:bg-blue-700"
+            onClick={handleLinkClick}
+          >
             Profile
           </Link>
           <Link

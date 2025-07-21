@@ -96,7 +96,6 @@ const RegisterPage = () => {
           <input
             type="password"
             name="password"
-            minLength={6}
             value={formData.password}
             onChange={handleChange}
             placeholder="Password"

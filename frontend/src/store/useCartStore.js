@@ -24,7 +24,7 @@ const useCartStore = create(
     }),
     {
       name: "cart-storage",
-      getStorage: () => localStorage, // explicitly use localStorage
+      getStorage: () => localStorage, 
     }
   )
 );

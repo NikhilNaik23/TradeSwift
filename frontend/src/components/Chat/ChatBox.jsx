@@ -4,7 +4,6 @@ import api from "../../utils/axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 
-// Utility: matches backend room function!
 function getChatRoomId(userId1, userId2, productId) {
   return [String(userId1), String(userId2)].sort().join("_") + "_" + productId;
 }
@@ -55,16 +54,13 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
     fetchMessages();
   }, [receiverId, productId]);
 
-  // Scroll to latest msg
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Inside ChatBox.jsx
   const sendMessage = async () => {
     if (!input.trim()) return;
     try {
-      // Save to DB for history
       const res = await api.post("/messages", {
         receiver: receiverId,
         product: productId,
@@ -83,7 +79,6 @@ const ChatBox = ({ currentUser, receiverId, productId }) => {
     }
   };
 
-  // Compare by id (handles string/object)
   const isCurrentUser = (sender) =>
     String(sender?._id || sender) === String(currentUser._id);
 

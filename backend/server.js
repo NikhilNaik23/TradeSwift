@@ -43,12 +43,10 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// Utility: always sort user IDs for consistent room
 function getChatRoomId(userId1, userId2, productId) {
   return [String(userId1), String(userId2)].sort().join("_") + "_" + productId;
 }
 
-// --- SOCKET.IO SETUP ---
 const io = new SocketIOServer(server, {
   cors: {
     origin: ["http://localhost:5173", "https://tradeswift-g2zu.onrender.com"],
@@ -57,7 +55,6 @@ const io = new SocketIOServer(server, {
   },
 });
 
-// SOCKET.IO AUTH
 io.use(async (socket, next) => {
   try {
     const token = socket.handshake.headers.cookie
@@ -76,22 +73,18 @@ io.use(async (socket, next) => {
   }
 });
 
-// SOCKET.IO CONNECTION
 io.on("connection", (socket) => {
   console.log(`✅ Connected: ${socket.user.name} (${socket.id})`);
 
-  // Always re-join room after connect/reconnect
   socket.on("joinRoom", ({ roomId }) => {
     socket.join(roomId);
     console.log(`Socket ${socket.id} joined room ${roomId}`);
-    // Log all sockets in this room for debugging:
     console.log(
       "Members in room:",
       Array.from(io.sockets.adapter.rooms.get(roomId) || [])
     );
   });
 
-  // Message Handling
   socket.on("sendMessage", async ({ message, receiver, product }) => {
     try {
       const sender = socket.user._id.toString();

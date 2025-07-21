@@ -63,8 +63,8 @@ const CartPage = () => {
       }
 
       toast.success("Order placed successfully 🧾");
-      await clearCart(); // Clean up wishlist after placing order
-      navigate("/buyer/orders"); // Redirect to orders page
+      await clearCart();
+      navigate("/buyer/orders");
     } catch (error) {
       console.error("Failed to place order:", error);
       toast.error(error?.response?.data?.message || "Failed to place order");
