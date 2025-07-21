@@ -45,14 +45,7 @@ const App = () => {
     fetchUser();
   }, [fetchUser]);
 
-  useEffect(() => {
-    user
-      ? user.role === "seller"
-        ? navigate("/seller/dashboard")
-        : navigate("/buyer/dashboard")
-      : navigate("/");
-  }, []);
-
+  
   return (
     <>
       <Toaster position="top-right" />
@@ -64,6 +57,8 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/products/:id" element={<ProductDetailsPage />} />
+
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         ) : user.role === "seller" ? (
           <Route
@@ -85,6 +80,8 @@ const App = () => {
               path="/seller/chat/:receiverId/:productId"
               element={<ChatPage />}
             />
+
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         ) : (
           <Route
@@ -105,9 +102,10 @@ const App = () => {
               path="/buyer/chat/:receiverId/:productId"
               element={<ChatPage />}
             />
+
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         )}
-        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );

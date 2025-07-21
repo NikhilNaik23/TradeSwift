@@ -38,10 +38,8 @@ const LoginPage = () => {
           navigate("/seller/dashboard");
         } else if (role === "buyer") {
           navigate("/buyer/dashboard");
-        } else if (role === "admin") {
-          navigate("/admin/dashboard");
         } else {
-          navigate("/"); // default fallback
+          navigate("/")
         }
       }
     } catch (err) {

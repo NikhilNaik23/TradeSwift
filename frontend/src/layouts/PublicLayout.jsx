@@ -7,6 +7,7 @@ import SellerNavbar from "../components/Seller/SellerNavbar";
 import BuyerNavbar from "../components/Buyer/BuyerNavbar";
 const PublicLayout = () => {
   const user = useAuthStore((state) => state.user);
+  
   return (
     <div className="min-h-screen flex flex-col">
       {!user ? (
