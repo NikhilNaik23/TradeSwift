@@ -82,7 +82,6 @@ const BuyerChatsPage = () => {
                 color: "#333",
               }}
             >
-              {/* Product Image */}
               {Array.isArray(conv.product?.images) && conv.product.images.length > 0 ? (
                 
                 <img
@@ -115,7 +114,6 @@ const BuyerChatsPage = () => {
                   No Img
                 </div>
               )}
-              {/* Buyer and product name */}
               <span>
                 {conv.buyer?.name || "Buyer"} ⟶ {conv.product?.title || "Product"}
               </span>
@@ -151,7 +149,7 @@ const BuyerChatsPage = () => {
                 transition: "background-color 0.3s ease",
               }}
               onClick={(e) => {
-                e.stopPropagation(); // prevent li click
+                e.stopPropagation(); 
                 navigate(`/seller/chat/${conv._id.buyer}/${conv._id.product}`);
               }}
             >

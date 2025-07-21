@@ -6,7 +6,13 @@ export const createOrder = async (req, res) => {
   try {
     const { product: productId, amount } = req.body;
     const buyerId = req.user._id;
-
+    const existingOrder = await Order.findOne({
+      buyer: buyerId,
+      product: productId,
+    });
+    if (existingOrder) {
+      return res.status(400).json({ message: "Order is already been placed" });
+    }
     const product = await Product.findById(productId).populate("postedBy");
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -17,7 +23,9 @@ export const createOrder = async (req, res) => {
     }
 
     if (product.postedBy.toString() === buyerId.toString()) {
-      return res.status(400).json({ message: "You cannot buy your own product" });
+      return res
+        .status(400)
+        .json({ message: "You cannot buy your own product" });
     }
 
     const order = await Order.create({
@@ -91,11 +99,7 @@ export const updateOrderStatus = async (req, res) => {
   const { status } = req.body;
 
   try {
-    const order = await Order.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
     if (!order) return res.status(404).json({ message: "Order not found" });
 
     res.status(200).json({ message: "Order status updated", order });

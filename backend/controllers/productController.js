@@ -9,7 +9,6 @@ export const createProduct = async (req, res) => {
   const { title, description, price, category, condition, phone } = data;
   const user_id = req.user?._id;
 
-  // Validation check
   const missing = [];
   if (!title) missing.push("title");
   if (!description) missing.push("description");
