@@ -21,7 +21,18 @@ const SellerOrders = () => {
       await api.put(`/orders/${orderId}/status`, { status: "sold" });
       await api.patch(`/products/${productId}/sold`);
       toast.success("Marked as sold!");
-      fetchOrders(); // Refresh list
+      fetchOrders();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update status.");
+    }
+  };
+
+  const markAsCancelled = async (orderId) => {
+    try {
+      await api.put(`/orders/${orderId}/status`, { status: "cancelled" });
+      toast.success("Marked as cancelled!");
+      fetchOrders();
     } catch (err) {
       console.error(err);
       toast.error("Failed to update status.");
@@ -29,8 +40,21 @@ const SellerOrders = () => {
   };
 
   useEffect(() => {
-    fetchOrders();
+    const safeFetch = async () => {
+      try {
+        await fetchOrders();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    safeFetch();
   }, []);
+
+  const statusColors = {
+    pending: "text-yellow-600",
+    sold: "text-green-600",
+    cancelled: "text-red-600",
+  };
 
   return (
     <div className="p-6 min-h-screen bg-gray-100">
@@ -48,6 +72,14 @@ const SellerOrders = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
+              {order.product?.image && (
+                <img
+                  src={order.product.image}
+                  alt={order.product.title}
+                  className="w-full h-48 object-cover rounded-md mb-4"
+                />
+              )}
+
               <h3 className="text-xl font-semibold text-indigo-600 mb-2">
                 {order.product?.title || "Untitled Product"}
               </h3>
@@ -66,15 +98,7 @@ const SellerOrders = () => {
 
               <p className="text-gray-700">
                 <span className="font-medium">Status:</span>{" "}
-                <span
-                  className={`font-bold ${
-                    order.status === "pending"
-                      ? "text-yellow-600"
-                      : order.status === "sold"
-                      ? "text-green-600"
-                      : "text-gray-600"
-                  }`}
-                >
+                <span className={`font-bold ${statusColors[order.status] || "text-gray-600"}`}>
                   {order.status}
                 </span>
               </p>
@@ -83,13 +107,21 @@ const SellerOrders = () => {
                 Ordered on: {new Date(order.createdAt).toLocaleDateString()}
               </p>
 
-              {order.status !== "sold" && (
-                <button
-                  className="mt-4 w-full py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition font-medium"
-                  onClick={() => markAsSold(order._id, order.product?._id)}
-                >
-                  Mark as Sold
-                </button>
+              {order.status === "pending" && (
+                <>
+                  <button
+                    className="mt-4 w-full py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition font-medium"
+                    onClick={() => markAsSold(order._id, order.product?._id)}
+                  >
+                    Mark as Sold
+                  </button>
+                  <button
+                    className="mt-2 w-full py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-medium"
+                    onClick={() => markAsCancelled(order._id)}
+                  >
+                    Cancel Order
+                  </button>
+                </>
               )}
             </motion.div>
           ))}
